@@ -1,1 +1,236 @@
 # App-for-ansell
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+</head>
+<body>
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">Data Entry Form</h1>
+      </div>
+    </div>
+  </section>
+  <form id="form" class="container m-4 pl-4" method="POST">
+    <div class="field">
+      <label class="label">Date</label>
+      <div class="control">
+        <input class="input" type="date" placeholder="Date" name="Date" />
+      </div>
+    </div>
+
+
+    <!-- Updated Section -->
+    <div class="field">
+      <label class="label">Machine Type</label>
+      <div class="control">
+        <div class="select">
+          <select id="machineType" name="Machine Type" required onchange="filterMachineNames()">
+            <option value="">--Select a category--</option>
+            <option value="Compressor">Compressor</option>
+            <option value="Generators">Generators</option>
+            <option value="Chiller">Chiller</option>
+            <option value="Cooling Tower">Cooling Tower</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Machine Name</label>
+      <div class="control">
+        <div class="select">
+          <select id="machineName" name="Machine Name" required>
+            <option value="">--Select a category--</option>
+            <!-- Compressor Options -->
+            <option value="S40">S40</option>
+            <option value="GA37 VSD">GA37 VSD</option>
+            <option value="GA110">GA110</option>
+            <option value="GA15 VSD+">GA15 VSD+</option>
+            <option value="GA75 VSD+">GA75 VSD+</option>
+            <option value="SLF 51-3">SLF 51-3</option>
+            <option value="SLF 51/8">SLF 51/8</option>
+            <option value="S20/2">S20/2</option>
+            <option value="S29/2">S29/2</option>
+            <option value="CL15 LR">CL15 LR</option>
+            <option value="C12-2 LDR">C12-2 LDR</option>
+            <!-- Generator Options -->
+            <option value="CUMMINS 500">CUMMINS 500</option>
+            <option value="FG WILSON 500">FG WILSON 500</option>
+            <option value="CUMMINS 12500 at BP">CUMMINS 12500 at BP</option>
+            <option value="CUMMINS 12500 at YARN">CUMMINS 12500 at YARN</option>
+            <option value="DENYO 610 SP">DENYO 610 SP</option>
+            <option value="CUMMINS 60 at NUGAWE">CUMMINS 60 at NUGAWE</option>
+            <option value="CUMMINS 60 at YMCA">CUMMINS 60 at YMCA</option>
+            <!-- Chiller and Cooling Tower Options -->
+            <option value="CHILLER 01">CHILLER 01</option>
+            <option value="CHILLER 02">CHILLER 02</option>
+            <option value="CHILLER 03 COM1">CHILLER 03 COM1</option>
+            <option value="CHILLER 03 COM2">CHILLER 03 COM2</option>
+            <option value="COOLING TOWER 01">COOLING TOWER 01</option>
+            <option value="COOLING TOWER 02">COOLING TOWER 02</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">No. of Hours</label>
+      <div class="control">
+        <input class="input" type="number" id="No. of Hours" name="No. of Hours" class="form-control" step="1" required />
+      </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Shift Electrician Name</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Shift Electrician Name" name="Shift Electrician Name" />
+        </div>
+      </div>
+
+    <div class="field">
+        <label class="label">ID</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="Your ID" name="ID" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Description</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Description" name="Description" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Condition</label>
+        <div class="control">
+          <div class="select">
+            <select name="Condition">
+              <option value="" disabled selected>Select the condition</option>
+              <option value="Good">Good</option>
+              <option value="Bad">Bad</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-primary" type="enter" id="submit-button">Enter</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger">Cancel</button>
+      </div>
+    </div>
+  </form>
+  <div 
+    id="message" 
+    style="display: none; 
+    margin: 20px; 
+    font-weight: bold; 
+    color: green; 
+    padding: 8px; 
+    background-color: beige; 
+    border-radius: 4px; 
+    border-color: aquamarine;"
+  ></div>
+
+  <script>
+    const initialHours = 1000; // Define the constant value
+
+    function calculateRemainingHours() {
+        const inputHours = document.getElementById('NoOfHours').value;
+        const remainingHours = initialHours - inputHours;
+
+        if (!isNaN(remainingHours) && inputHours !== '') {
+            alert('Remaining Hours: ' + remainingHours);
+        }
+    }
+    document.getElementById("form").addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent the default form submission
+        document.getElementById("message").textContent = "Submitting..";
+        document.getElementById("message").style.display = "block";
+        document.getElementById("submit-button").disabled = true;
+
+        // Collect the form data
+        var formData = new FormData(this);
+        var keyValuePairs = [];
+        for (var pair of formData.entries()) {
+          keyValuePairs.push(pair[0] + "=" + pair[1]);
+        }
+
+        var formDataString = keyValuePairs.join("&");
+
+        // Send a POST request to your Google Apps Script
+        fetch(
+          "https://script.google.com/macros/s/AKfycbwVNot07fYe8ZgliJP4nkiudLf_HeJWWKVNuOtaDfkoHPNIcd03sjiRXqFSnLbOtQsP/exec",
+          {
+            redirect: "follow",
+            method: "POST",
+            body: formDataString,
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+          }
+        )
+          .then(function (response) {
+            // Check if the request was successful
+            if (response) {
+              return response; // Assuming your script returns JSON response
+            } else {
+              throw new Error("Failed to submit the form.");
+            }
+          })
+          .then(function (data) {
+            // Display a success message
+            document.getElementById("message").textContent =
+              "Data submitted successfully!";
+            document.getElementById("message").style.display = "block";
+            document.getElementById("message").style.backgroundColor = "green";
+            document.getElementById("message").style.color = "beige";
+            document.getElementById("submit-button").disabled = false;
+            document.getElementById("form").reset();
+
+            setTimeout(function () {
+              document.getElementById("message").textContent = "";
+              document.getElementById("message").style.display = "none";
+            }, 2600);
+          })
+          .catch(function (error) {
+            // Handle errors, you can display an error message here
+            console.error(error);
+            document.getElementById("message").textContent =
+              "An error occurred while submitting the form.";
+            document.getElementById("message").style.display = "block";
+          });
+      });
+    function filterMachineNames() {
+      var machineType = document.getElementById("machineType").value;
+      var machineName = document.getElementById("machineName");
+
+      // Clear current options
+      machineName.innerHTML = '<option value="">--Select a category--</option>';
+
+      if (machineType === "Compressor") {
+        var options = ["S40", "GA37 VSD", "GA110", "GA15 VSD+", "GA75 VSD+","SLF 51-3", "SLF 51/8", "S20/2", "S29/2", "CL15 LR", "C12-2 LDR"];
+      } else if (machineType === "Generators") {
+        var options = ["CUMMINS 500", "FG WILSON 500", "CUMMINS 12500 at BP", "CUMMINS 12500 at YARN", "DENYO 610 SP", "CUMMINS 60 at NUGAWE", "CUMMINS 60 at YMCA"];
+      } else if (machineType === "Chiller") {
+        var options = ["CHILLER 01", "CHILLER 02", "CHILLER 03 COM1", "CHILLER 03 COM2"];
+      }else  {
+        var options = ["COOLING TOWER 01", "COOLING TOWER 02"]; // For other categories, no options are set
+      }
+
+      // Add new options
+      options.forEach(function(option) {
+        var opt = document.createElement("option");
+        opt.value = option;
+        opt.innerHTML = option;
+        machineName.appendChild(opt);
+      });
+    }
+  </script>
+</body>
+</html>
